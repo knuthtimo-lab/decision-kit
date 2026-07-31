@@ -1,0 +1,28 @@
+name: 'Decision Kit Action'
+description: 'Automated decision maker, random picker, dice roller, and team generator for GitHub workflows. Powered by Entscheidomat.com.'
+author: 'Entscheidomat <https://entscheidomat.com>'
+branding:
+  icon: 'help-circle'
+  color: 'purple'
+
+inputs:
+  command:
+    description: 'Decision command to execute: pick | roll | flip | 8ball | team'
+    required: false
+    default: 'pick'
+  items:
+    description: 'Comma-separated options for pick/team or dice expression for roll (e.g. "Deploy,Wait,Rollback" or "2d6+3")'
+    required: false
+    default: 'Yes,No'
+  teams:
+    description: 'Number of teams for team command'
+    required: false
+    default: '2'
+
+outputs:
+  result:
+    description: 'The winning decision or evaluated result text'
+
+runs:
+  using: 'node20'
+  main: 'dist/action.js'

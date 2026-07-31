@@ -1,27 +1,67 @@
 # decision-kit
 
-Reusable TypeScript utilities for the small moments when an application needs
-to make a fair random choice: weighted picks, wheel spins, dice rolls, coin
-flips, team allocation, and Magic 8-Ball answers.
+[![npm version](https://img.shields.io/npm/v/decision-kit.svg?style=for-the-badge&color=6366f1)](https://www.npmjs.com/package/decision-kit)
+[![GitHub Action](https://img.shields.io/badge/GitHub%20Action-Marketplace-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/marketplace/actions/decision-kit-action)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Powered by](https://img.shields.io/badge/Powered%20by-Entscheidomat.com-ec4899?style=for-the-badge&logo=react)](https://entscheidomat.com)
 
-Use the framework-agnostic core in Node.js or the browser. When you are using
-React, optional hooks provide the state needed to animate a wheel, roll dice,
-or flip a coin.
+[Interactive Web Demos](https://entscheidomat.com) · [Installation](#installation) · [Examples](#examples) · [CLI](#cli)
 
-[Explore the live decision tools on Entscheidomat](https://entscheidomat.com) ·
-[Installation](#installation) · [Examples](#examples) · [CLI](#cli)
+## 🚀 Overview
 
-## What is included?
+`decision-kit` provides battle-tested algorithms, physics state machines, React hooks, and a **GitHub Action** to build modern decision-making applications, games, and automated workflow triggers.
 
-- `AliasMethod` — weighted random selection with O(n) setup and O(1) draws
-- `WheelPhysics` — a winner, stopping angle, rotation count, and easing helper
-  for a spinner-wheel UI
-- `DiceEngine` — common tabletop notation such as `2d6+3`, `4d6kh3`, and
-  d20 advantage/disadvantage
-- `TeamBalancer` — shuffled, evenly sized teams and draws without replacement
-- `CoinFlipEngine` and `Magic8BallEngine` — small random-decision primitives
-  with English and German output
-- `useWheelSpin`, `useCoinFlip`, and `useDiceRoll` — optional React hooks
+Maintained and sponsored by **[Entscheidomat.com](https://entscheidomat.com)** — the free online decision suite.
+
+## Try the live tools
+
+Want to see the ideas behind this package in a finished product? These free
+browser tools are built around the same decision-making use cases:
+
+| Tool | Try it online |
+| --- | --- |
+| Spinner wheel | [Open the Glücksrad](https://entscheidomat.com/gluecksrad) |
+| Yes/no decision | [Open the Ja/Nein-Generator](https://entscheidomat.com/ja-nein-generator) |
+| Dice rolls | [Open the online dice](https://entscheidomat.com/wuerfel-online) |
+| Coin flips | [Open the coin flip](https://entscheidomat.com/muenze-werfen) |
+| Magic 8-Ball | [Open the Magic 8-Ball](https://entscheidomat.com/magic-8-ball) |
+| Name drawing | [Open the Namen-Auslosung](https://entscheidomat.com/namen-auslosen) |
+| Random numbers | [Open the Zufallszahl-Generator](https://entscheidomat.com/zufallszahl-generator) |
+
+## 🤖 GitHub Action Usage
+
+Use `decision-kit` directly inside your GitHub Actions CI/CD workflows:
+
+```yaml
+name: Random Decision Workflow
+
+on: [push]
+
+jobs:
+  decide:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make Random Choice
+        id: pick
+        uses: knuthtimo-lab/decision-kit@v1.0.0
+        with:
+          command: 'pick'
+          items: 'Deploy Staging, Deploy Prod, Wait'
+
+      - name: Print Result
+        run: echo "The decision is: ${{ steps.pick.outputs.result }}"
+```
+
+### ✨ Highlights
+- **🤖 GitHub Action (`action.yml`)**: Automated decision making, dice rolling, and team division right inside GitHub Actions workflows.
+- **⚡ Vose's Alias Method (`AliasMethod`)**: Fast $O(1)$ weighted random sampling after $O(N)$ initialization.
+- **🎡 Spinner Wheel Physics (`WheelPhysics`)**: Friction deceleration, inertia curves, and target sector alignment calculations.
+- **🎲 Tabletop Dice Notation (`DiceEngine`)**: Full parser for RPG dice expressions (`3d6+2`, `1d20 advantage`, `4d6kh3`).
+- **👥 Fair Group Partitioning (`TeamBalancer`)**: Cryptographically secure Fisher-Yates group partition and multi-item draw algorithms.
+- **🪙 Coin Flip & Magic 8-Ball Engines**: State machines for fair coin tosses and multilingual oracle responses (EN/DE).
+- **⚛️ Ready-to-use React Hooks**: React 18 & 19 compatible hooks (`useWheelSpin`, `useCoinFlip`, `useDiceRoll`).
+- **🖥️ Terminal CLI (`npx decision-kit`)**: Instant terminal decisions for command-line users.
 
 ## Installation
 
@@ -149,16 +189,6 @@ npx decision-kit team --names "Anna,Ben,Clara,Dan" --teams 2
 ```
 
 Run `npx decision-kit --help` to see the available commands.
-
-## Live tools
-
-This package is maintained by [Entscheidomat](https://entscheidomat.com), a
-free browser-based collection of decision and randomizer tools. Try the
-[wheel of fortune](https://entscheidomat.com/gluecksrad),
-[yes/no generator](https://entscheidomat.com/ja-nein-generator),
-[online dice](https://entscheidomat.com/wuerfel-online),
-[coin flip](https://entscheidomat.com/muenze-werfen), or
-[name picker](https://entscheidomat.com/namen-auslosen).
 
 ## Randomness and fairness
 
