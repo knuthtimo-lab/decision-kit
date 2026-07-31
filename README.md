@@ -1,196 +1,182 @@
-<div align="center">
+# decision-kit
 
-# 🎲 decision-kit
+Reusable TypeScript utilities for the small moments when an application needs
+to make a fair random choice: weighted picks, wheel spins, dice rolls, coin
+flips, team allocation, and Magic 8-Ball answers.
 
-**The ultimate zero-dependency TypeScript & React library for decision-making algorithms, spinner wheels, weighted sampling, dice notation, and team generators.**
+Use the framework-agnostic core in Node.js or the browser. When you are using
+React, optional hooks provide the state needed to animate a wheel, roll dice,
+or flip a coin.
 
-[![npm version](https://img.shields.io/npm/v/decision-kit.svg?style=for-the-badge&color=6366f1)](https://www.npmjs.com/package/decision-kit)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
-[![Powered by](https://img.shields.io/badge/Powered%20by-Entscheidomat.com-ec4899?style=for-the-badge&logo=react)](https://entscheidomat.com)
+[Explore the live decision tools on Entscheidomat](https://entscheidomat.com) ·
+[Installation](#installation) · [Examples](#examples) · [CLI](#cli)
 
-[Interactive Web Demos](https://entscheidomat.com) • [Documentation](#documentation) • [CLI Quickstart](#cli-tool-npx-decision-kit)
+## What is included?
 
-</div>
+- `AliasMethod` — weighted random selection with O(n) setup and O(1) draws
+- `WheelPhysics` — a winner, stopping angle, rotation count, and easing helper
+  for a spinner-wheel UI
+- `DiceEngine` — common tabletop notation such as `2d6+3`, `4d6kh3`, and
+  d20 advantage/disadvantage
+- `TeamBalancer` — shuffled, evenly sized teams and draws without replacement
+- `CoinFlipEngine` and `Magic8BallEngine` — small random-decision primitives
+  with English and German output
+- `useWheelSpin`, `useCoinFlip`, and `useDiceRoll` — optional React hooks
 
----
+## Installation
 
-## 🚀 Overview
-
-`decision-kit` provides battle-tested algorithms, physics state machines, and React hooks to build modern decision-making applications, games, and random generators. 
-
-Maintained and sponsored by **[Entscheidomat.com](https://entscheidomat.com)** — the free online decision suite.
-
-### ✨ Highlights
-- **⚡ Vose's Alias Method (`AliasMethod`)**: Fast $O(1)$ weighted random sampling after $O(N)$ initialization.
-- **🎡 Spinner Wheel Physics (`WheelPhysics`)**: Friction deceleration, inertia curves, and target sector alignment calculations.
-- **🎲 Tabletop Dice Notation (`DiceEngine`)**: Full parser for RPG dice expressions (`3d6+2`, `1d20 advantage`, `4d6kh3`).
-- **👥 Fair Group Partitioning (`TeamBalancer`)**: Cryptographically secure Fisher-Yates group partition and multi-item draw algorithms.
-- **🪙 Coin Flip & Magic 8-Ball Engines**: State machines for fair coin tosses and multilingual oracle responses (EN/DE).
-- **⚛️ Ready-to-use React Hooks**: React 18 & 19 compatible hooks (`useWheelSpin`, `useCoinFlip`, `useDiceRoll`).
-- **🖥️ Terminal CLI (`npx decision-kit`)**: Instant terminal decisions for command-line users.
-
----
-
-## 🌐 Interactive Web Demos
-
-Experience these decision-making tools live on **[Entscheidomat.com](https://entscheidomat.com)**:
-
-| Tool | Description | Live Demo Link |
-| :--- | :--- | :--- |
-| **🎡 Glücksrad** | Animated spinner wheel with customizable weighted options | [entscheidomat.com/gluecksrad](https://entscheidomat.com/gluecksrad) |
-| **❓ Ja / Nein Generator** | Instant decision generator with visual feedback | [entscheidomat.com/ja-nein-generator](https://entscheidomat.com/ja-nein-generator) |
-| **🎲 Würfel** | 3D multi-dice simulator for tabletop games | [entscheidomat.com/wuerfel](https://entscheidomat.com/wuerfel) |
-| **🪙 Münzwurf** | Physics coin toss simulation with heads/tails stats | [entscheidomat.com/muenzwurf](https://entscheidomat.com/muenzwurf) |
-| **🎱 Magic 8-Ball** | Mysterious oracle answer generator | [entscheidomat.com/magic-8-ball](https://entscheidomat.com/magic-8-ball) |
-| **🏷️ Namen Auslosung** | Random name picker, raffle draw & group generator | [entscheidomat.com/namen-auslosung](https://entscheidomat.com/namen-auslosung) |
-| **🔢 Zufallszahl** | Secure random number range generator | [entscheidomat.com/zufallszahl-generator](https://entscheidomat.com/zufallszahl-generator) |
-
----
-
-## 📦 Installation
+After the package is published to npm:
 
 ```bash
-# npm
 npm install decision-kit
-
-# pnpm
-pnpm add decision-kit
-
-# yarn
-yarn add decision-kit
+# or: pnpm add decision-kit
+# or: yarn add decision-kit
 ```
 
----
+The core library has no runtime dependencies. React is an optional peer
+dependency and is only needed when importing one of the React hooks.
 
-## 💡 Usage Examples
+## Examples
 
-### 1. Weighted Random Selection ($O(1)$ Alias Method)
+### Pick from weighted options
 
-```typescript
+Use `AliasMethod` when the same weighted list is sampled repeatedly. The
+preprocessing happens once; each subsequent selection is constant time.
+
+```ts
 import { AliasMethod } from "decision-kit";
 
-const options = [
-  { id: "common", label: "Common Loot", weight: 70 },
-  { id: "rare", label: "Rare Loot", weight: 25 },
-  { id: "legendary", label: "Legendary Loot", weight: 5 },
-];
+const loot = new AliasMethod([
+  { id: "common", label: "Common", weight: 70 },
+  { id: "rare", label: "Rare", weight: 25 },
+  { id: "legendary", label: "Legendary", weight: 5 },
+]);
 
-// O(N) setup
-const alias = new AliasMethod(options);
-
-// O(1) sampling
-const item = alias.next();
-console.log("Won item:", item.label);
+console.log(loot.next());
+// { id: "rare", label: "Rare", weight: 25 } (example)
 ```
 
----
+### Roll tabletop dice
 
-### 2. RPG Dice Notation Parser
-
-```typescript
+```ts
 import { DiceEngine } from "decision-kit";
 
-// Standard notation with modifier
-const roll1 = DiceEngine.roll("3d6+2");
-console.log(roll1.total); // e.g. 14
-console.log(roll1.breakdown); // "[4, 5, 3]+2 = 14"
+const roll = DiceEngine.roll("4d6kh3");
 
-// Advantage roll (2d20 keep highest)
-const adv = DiceEngine.roll("1d20 advantage");
-console.log(adv.total, adv.criticalHit);
-
-// Keep highest 3 of 4d6 (character stat generation)
-const stat = DiceEngine.roll("4d6kh3");
-console.log(stat.breakdown); // "[6, 5, 4, 2] (keep highest 3) = 15"
+console.log(roll.total);
+console.log(roll.breakdown);
+// [6, 5, 4, 2] (keep highest 3) = 15 (example)
 ```
 
----
+Supported notation includes standard rolls (`2d6`, `1d20+4`), keep-highest
+and drop-lowest modifiers (`4d6kh3`, `4d6dl1`), plus `adv` / `advantage` and
+`dis` / `disadvantage` for d20 rolls.
 
-### 3. Fair Team & Group Generator
+### Build a spinner wheel
 
-```typescript
+`WheelPhysics` selects an option according to its weight and returns the
+rotation needed to place its segment under a top pointer. Render and animate
+the wheel however you prefer.
+
+```ts
+import { WheelPhysics } from "decision-kit";
+
+const options = [
+  { id: "pizza", label: "Pizza", weight: 1 },
+  { id: "sushi", label: "Sushi", weight: 1 },
+  { id: "curry", label: "Curry", weight: 1 },
+];
+
+const spin = new WheelPhysics().calculateSpin(options);
+
+console.log(spin.winner.label);
+console.log(spin.targetAngle); // rotate the wheel to this angle
+```
+
+### Split people into teams
+
+```ts
 import { TeamBalancer } from "decision-kit";
 
-const members = ["Alice", "Bob", "Charlie", "Dave", "Eve", "Frank"];
+const teams = TeamBalancer.divideTeams(
+  ["Ada", "Ben", "Chris", "Dana", "Emil", "Fatima"],
+  2,
+  ["Blue", "Gold"]
+);
 
-// Divide members into 2 balanced teams
-const teams = TeamBalancer.divideTeams(members, 2);
 console.log(teams);
-/*
-[
-  { id: 1, name: "Team 1", members: ["Charlie", "Alice", "Frank"] },
-  { id: 2, name: "Team 2", members: ["Eve", "Bob", "Dave"] }
-]
-*/
 ```
 
----
-
-### 4. React Wheel Spinner Hook
+### Use the React wheel hook
 
 ```tsx
-import React from "react";
 import { useWheelSpin } from "decision-kit";
 
 const options = [
   { id: "1", label: "Pizza", weight: 1 },
   { id: "2", label: "Sushi", weight: 1 },
-  { id: "3", label: "Burger", weight: 1 },
 ];
 
 export function FoodWheel() {
-  const { isSpinning, currentAngle, winner, spin } = useWheelSpin({}, (result) => {
-    console.log("Spin finished! Winner:", result.winner.label);
-  });
+  const { currentAngle, isSpinning, winner, spin } = useWheelSpin();
 
   return (
-    <div>
-      <div
-        style={{
-          transform: `rotate(${currentAngle}deg)`,
-          transition: isSpinning ? "transform 4s cubic-bezier(0.25, 0.1, 0.25, 1)" : "none",
-        }}
-      >
-        🎡 Wheel Canvas / SVG
-      </div>
-
-      <button onClick={() => spin(options)} disabled={isSpinning}>
-        {isSpinning ? "Spinning..." : "Spin Wheel!"}
+    <>
+      <div style={{ transform: `rotate(${currentAngle}deg)` }}>Wheel</div>
+      <button disabled={isSpinning} onClick={() => spin(options)}>
+        {isSpinning ? "Spinning…" : "Spin"}
       </button>
-
-      {winner && <h3>Winner: {winner.label}</h3>}
-    </div>
+      {winner && <p>Selected: {winner.label}</p>}
+    </>
   );
 }
 ```
 
----
+The hook updates `currentAngle` over four seconds with a cubic ease-out curve.
+Use that value to rotate an SVG, canvas, or HTML wheel.
 
-## 🖥️ CLI Tool (`npx decision-kit`)
+## CLI
 
-Make instant decisions straight from your terminal:
+For quick decisions from a terminal, use the included command after installing
+the package globally or through `npx`:
 
 ```bash
-# Pick a random winner from options
 npx decision-kit pick "Option A" "Option B" "Option C"
-
-# Roll dice
 npx decision-kit roll 2d6+3
-npx decision-kit roll 1d20
-
-# Flip coins
 npx decision-kit flip 5
-
-# Ask Magic 8-Ball
 npx decision-kit 8ball de
-
-# Divide group into teams
-npx decision-kit team --names "Anna,Ben,Clara,Dan,Erik,Faye" --teams 2
+npx decision-kit team --names "Anna,Ben,Clara,Dan" --teams 2
 ```
 
----
+Run `npx decision-kit --help` to see the available commands.
 
-## 📄 License
+## Live tools
 
-MIT © **[Entscheidomat](https://entscheidomat.com)** — Built with ❤️ for decision makers everywhere.
+This package is maintained by [Entscheidomat](https://entscheidomat.com), a
+free browser-based collection of decision and randomizer tools. Try the
+[wheel of fortune](https://entscheidomat.com/gluecksrad),
+[yes/no generator](https://entscheidomat.com/ja-nein-generator),
+[online dice](https://entscheidomat.com/wuerfel-online),
+[coin flip](https://entscheidomat.com/muenze-werfen), or
+[name picker](https://entscheidomat.com/namen-auslosen).
+
+## Randomness and fairness
+
+The package uses JavaScript's `Math.random()` and provides probabilistic,
+not cryptographic, randomness. It is appropriate for games, UI choices, and
+casual allocations. Do not use it for security-sensitive draws, gambling, or
+any outcome that requires a cryptographically secure random source.
+
+## Development
+
+```bash
+npm install
+npm run build
+npm test
+```
+
+The build creates CommonJS, ESM, and TypeScript declaration files in `dist/`.
+
+## License
+
+[MIT](LICENSE) © [Entscheidomat](https://entscheidomat.com)
