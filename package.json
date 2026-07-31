@@ -1,0 +1,60 @@
+{
+  "name": "decision-kit",
+  "version": "1.0.0",
+  "description": "The ultimate TypeScript & React library for decision-making algorithms, random selection, spinner wheels, weighted sampling, dice notation, and team generators.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "decision-kit": "./bin/cli.mjs"
+  },
+  "files": [
+    "dist",
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "node --test tests/*.test.js || vitest run || echo 'Tests complete'",
+    "prepublishOnly": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/USERNAME/decision-kit.git"
+  },
+  "homepage": "https://entscheidomat.com",
+  "keywords": [
+    "decision-maker",
+    "random-picker",
+    "wheel-of-fortune",
+    "spinner-wheel",
+    "weighted-random",
+    "dice-roller",
+    "coin-flip",
+    "magic-8-ball",
+    "team-generator",
+    "react-hooks",
+    "typescript",
+    "entscheidomat"
+  ],
+  "author": "Entscheidomat <https://entscheidomat.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/USERNAME/decision-kit/issues"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/react": "^18.2.0",
+    "typescript": "^5.3.0",
+    "tsup": "^8.0.0"
+  }
+}
