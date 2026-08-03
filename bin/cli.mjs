@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 
-import { AliasMethod } from "../dist/index.mjs";
-import { DiceEngine } from "../dist/index.mjs";
-import { TeamBalancer } from "../dist/index.mjs";
-import { CoinFlipEngine } from "../dist/index.mjs";
-import { Magic8BallEngine } from "../dist/index.mjs";
+import {
+  AliasMethod,
+  DiceEngine,
+  TeamBalancer,
+  CoinFlipEngine,
+  Magic8BallEngine,
+} from "../dist/core.mjs";
 
 const args = process.argv.slice(2);
 const command = args[0];
